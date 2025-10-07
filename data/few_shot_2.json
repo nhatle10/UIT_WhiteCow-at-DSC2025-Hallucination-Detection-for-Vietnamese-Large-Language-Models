@@ -1,0 +1,65 @@
+[ 
+ {
+    "context": "Ngày 30 tháng 4 năm 1975, Chiến dịch Hồ Chí Minh kết thúc thắng lợi, đánh dấu sự sụp đổ của chính quyền Việt Nam Cộng hòa và sự thống nhất hoàn toàn của đất nước Việt Nam. Vào lúc 11 giờ 30 phút, xe tăng của Quân Giải phóng miền Nam Việt Nam đã húc đổ cổng chính của Dinh Độc Lập. Tổng thống cuối cùng của Việt Nam Cộng hòa, Dương Văn Minh, đã tuyên bố đầu hàng không điều kiện. Sự kiện này đã chấm dứt cuộc Chiến tranh Việt Nam kéo dài và mở ra một thời kỳ mới của hòa bình và thống nhất cho dân tộc.",
+    "prompt": "Sự kiện nào đã diễn ra vào lúc 11 giờ 30 phút ngày 30 tháng 4 năm 1975 tại Dinh Độc Lập?",
+    "generated_response": "Vào lúc 11 giờ 30 phút ngày 30 tháng 4 năm 1975, xe tăng của Quân Giải phóng miền Nam Việt Nam đã húc đổ cổng chính của Dinh Độc Lập.",
+    "label": "no",
+    "explanation": "Câu trả lời trích dẫn chính xác và trực tiếp thông tin từ ngữ cảnh về sự kiện diễn ra tại thời điểm cụ thể được hỏi."
+  },
+  {
+    "context": "Quần thể danh thắng Tràng An ở Ninh Bình đã được UNESCO công nhận là Di sản Thế giới hỗn hợp đầu tiên của Việt Nam và Đông Nam Á vào năm 2014. Danh hiệu này được trao dựa trên hai tiêu chí: giá trị văn hóa (là nơi có các di chỉ khảo cổ học về sự cư trú của con người thời tiền sử) và giá trị thẩm mỹ (cảnh quan tháp karst hùng vĩ trong vùng đất ngập nước). Tràng An nổi tiếng với hệ thống các hang động xuyên thủy, các thung lũng và các di tích lịch sử văn hóa gắn liền với kinh đô Hoa Lư xưa.",
+    "prompt": "Tại sao quần thể danh thắng Tràng An lại được công nhận là Di sản Thế giới hỗn hợp?",
+    "generated_response": "Tràng An được công nhận là Di sản Thế giới hỗn hợp vì nó chỉ đáp ứng duy nhất tiêu chí về giá trị thẩm mỹ, với cảnh quan các tháp karst trong vùng đất ngập nước.",
+    "label": "intrinsic",
+    "explanation": "Phản hồi này mâu thuẫn với ngữ cảnh khi khẳng định Tràng An chỉ đáp ứng một tiêu chí (thẩm mỹ), trong khi ngữ cảnh nêu rõ nó được công nhận dựa trên cả hai tiêu chí là văn hóa và thẩm mỹ."
+  },
+  {
+    "context": "FPT là một trong những tập đoàn công nghệ thông tin và viễn thông hàng đầu của Việt Nam, được thành lập vào ngày 13 tháng 9 năm 1988. Ban đầu, FPT hoạt động trong lĩnh vực kinh doanh thực phẩm, nhưng nhanh chóng chuyển hướng sang công nghệ thông tin. Các lĩnh vực hoạt động chính của tập đoàn hiện nay bao gồm viễn thông, phần mềm, giáo dục và bán lẻ. FPT đã có những đóng góp quan trọng cho sự phát triển của ngành công nghệ thông tin Việt Nam và đang vươn ra thị trường toàn cầu với sự hiện diện ở hàng chục quốc gia.",
+    "prompt": "Tập đoàn FPT được thành lập vào ngày nào và lĩnh vực kinh doanh ban đầu là gì?",
+    "generated_response": "Tập đoàn FPT được thành lập vào ngày 13 tháng 9 năm 1988 và ban đầu hoạt động trong lĩnh vực kinh doanh thực phẩm. Sự chuyển đổi sang công nghệ là do ảnh hưởng từ cuộc cách mạng công nghiệp 4.0 trên toàn cầu.",
+    "label": "extrinsic",
+    "explanation": "Câu trả lời đúng về ngày thành lập và lĩnh vực ban đầu. Tuy nhiên, lý do chuyển đổi sang công nghệ ('do ảnh hưởng từ cuộc cách mạng công nghiệp 4.0') là một suy diễn và không được đề cập trong văn bản."
+  },
+  {
+    "context": "Múa rối nước là một loại hình nghệ thuật sân khấu dân gian truyền thống độc đáo của Việt Nam, ra đời từ nền văn minh lúa nước ở vùng Đồng bằng Bắc Bộ. Sân khấu của múa rối nước là mặt nước, các con rối được làm bằng gỗ và được điều khiển bởi những người nghệ sĩ đứng sau một bức mành tre. Các vở diễn thường tái hiện lại cuộc sống sinh hoạt của người nông dân như cày cấy, chăn vịt, bắt cá, hay các lễ hội, các điển tích lịch sử. Nghệ thuật này đòi hỏi sự khéo léo, tài tình của người nghệ sĩ để điều khiển con rối một cách sinh động và có hồn.",
+    "prompt": "Loại hình nghệ thuật múa rối nước có nguồn gốc từ đâu?",
+    "generated_response": "Múa rối nước là một loại hình nghệ thuật sân khấu dân gian truyền thống của Việt Nam, ra đời từ nền văn minh lúa nước ở vùng Đồng bằng Bắc Bộ.",
+    "label": "no",
+    "explanation": "Phản hồi cung cấp thông tin chính xác về nguồn gốc của múa rối nước, hoàn toàn khớp với ngữ cảnh."
+  },
+  {
+    "context": "Năm 1802, sau khi thống nhất đất nước, vua Gia Long (Nguyễn Ánh) đã thành lập triều Nguyễn và chọn Phú Xuân (Huế) làm kinh đô. Ông cho xây dựng một hệ thống kinh thành và cung điện nguy nga, được gọi là Kinh thành Huế. Công trình này được xây dựng theo kiểu kiến trúc Vauban của Pháp, kết hợp với các nguyên tắc kiến trúc truyền thống của phương Đông. Quần thể di tích Cố đô Huế bao gồm Hoàng thành (nơi làm việc của triều đình) và Tử Cấm thành (nơi sinh hoạt của vua và hoàng gia), cùng với nhiều lăng tẩm của các vị vua triều Nguyễn.",
+    "prompt": "Kinh thành Huế dưới thời vua Gia Long được xây dựng theo phong cách kiến trúc nào?",
+    "generated_response": "Kinh thành Huế dưới thời vua Gia Long được xây dựng hoàn toàn theo kiến trúc truyền thống của phương Đông và không có bất kỳ ảnh hưởng nào từ kiến trúc phương Tây.",
+    "label": "intrinsic",
+    "explanation": "Phản hồi này khẳng định sai sự thật, mâu thuẫn với ngữ cảnh vốn nói rõ Kinh thành Huế được xây dựng theo kiểu kiến trúc Vauban của Pháp kết hợp với kiến trúc phương Đông."
+  },
+  {
+    "context": "Lễ hội Kate là một trong những lễ hội dân gian quan trọng và đặc sắc nhất của người Chăm theo đạo Bà La Môn ở Việt Nam, thường được tổ chức tại các tháp Chăm ở Ninh Thuận và Bình Thuận. Lễ hội diễn ra vào đầu tháng 7 theo lịch Chăm (khoảng tháng 9-10 dương lịch) hàng năm, kéo dài trong 3 ngày. Đây là dịp để người Chăm tưởng nhớ các vị thần linh, tổ tiên và cầu mong mưa thuận gió hòa, mùa màng bội thu. Trong lễ hội, nhiều nghi lễ trang trọng và các hoạt động văn hóa, nghệ thuật dân gian được diễn ra.",
+    "prompt": "Lễ hội Kate của người Chăm có ý nghĩa gì?",
+    "generated_response": "Lễ hội Kate là dịp để người Chăm tưởng nhớ các vị thần linh, tổ tiên và cầu mong mưa thuận gió hòa, mùa màng bội thu. Đây cũng là lễ hội lớn nhất Đông Nam Á, thu hút hàng triệu du khách quốc tế mỗi năm.",
+    "label": "extrinsic",
+    "explanation": "Nửa đầu câu trả lời đúng với ngữ cảnh. Nửa sau thêm thông tin không có trong văn bản và không chính xác về việc đây là 'lễ hội lớn nhất Đông Nam Á, thu hút hàng triệu du khách'."
+  },
+  {
+    "context": "Chữ Quốc ngữ, hệ thống chữ viết chính thức của tiếng Việt hiện nay, được hình thành dựa trên bảng chữ cái Latinh. Quá trình này bắt nguồn từ thế kỷ 17, do các nhà truyền giáo Dòng Tên người Bồ Đào Nha, Ý và Pháp khởi xướng nhằm mục đích phục vụ cho việc truyền đạo. Alexandre de Rhodes, một giáo sĩ người Pháp, được xem là người có công lớn trong việc hệ thống hóa và hoàn thiện chữ Quốc ngữ qua việc xuất bản cuốn từ điển Việt-Bồ-La vào năm 1651. Tuy nhiên, phải đến đầu thế kỷ 20, chữ Quốc ngữ mới dần được phổ biến và thay thế cho chữ Nôm và chữ Hán trong hầu hết các lĩnh vực.",
+    "prompt": "Ai được coi là người có công lớn trong việc hệ thống hóa chữ Quốc ngữ?",
+    "generated_response": "Alexandre de Rhodes, một giáo sĩ người Pháp, được xem là người có công lớn trong việc hệ thống hóa và hoàn thiện chữ Quốc ngữ thông qua việc xuất bản cuốn từ điển Việt-Bồ-La vào năm 1651.",
+    "label": "no",
+    "explanation": "Phản hồi trích xuất chính xác thông tin về vai trò của Alexandre de Rhodes như đã được mô tả trong ngữ cảnh."
+  },
+  {
+    "context": "Đờn ca tài tử Nam Bộ là một loại hình nghệ thuật dân gian đặc trưng của vùng miền Nam Việt Nam, đã được UNESCO công nhận là Di sản văn hóa phi vật thể của nhân loại vào năm 2013. Nghệ thuật này là sự kết hợp giữa ca và đàn, với các nhạc cụ chủ yếu là đàn kìm, đàn tranh, đàn cò và sáo. Đờn ca tài tử thường được biểu diễn trong không gian thân mật, ấm cúng như trong các buổi họp mặt gia đình, bạn bè sau những giờ lao động. Nội dung các bài ca thường xoay quanh cuộc sống, tình yêu và vẻ đẹp của con người, quê hương.",
+    "prompt": "Đờn ca tài tử Nam Bộ thường được trình diễn trong không gian như thế nào?",
+    "generated_response": "Đờn ca tài tử Nam Bộ thường được biểu diễn trên các sân khấu lớn, hiện đại với hệ thống âm thanh và ánh sáng chuyên nghiệp, tương tự như các buổi hòa nhạc cổ điển.",
+    "label": "intrinsic",
+    "explanation": "Phản hồi này mô tả một không gian biểu diễn trái ngược hoàn toàn với thông tin trong ngữ cảnh, vốn nói rằng Đờn ca tài tử được biểu diễn trong 'không gian thân mật, ấm cúng'."
+  },
+  {
+    "context": "Nước mắm là một loại gia vị truyền thống không thể thiếu trong ẩm thực Việt Nam, được làm từ cá và muối ủ chượp theo phương pháp cổ truyền. Các vùng sản xuất nước mắm nổi tiếng nhất cả nước là Phú Quốc (Kiên Giang) và Phan Thiết (Bình Thuận). Nước mắm Phú Quốc nổi tiếng vì được làm từ cá cơm than tươi, tạo ra sản phẩm có độ đạm cao và màu cánh gián đặc trưng. Quy trình sản xuất nước mắm truyền thống đòi hỏi thời gian ủ dài, thường từ 6 tháng đến 1 năm, để cá phân hủy tự nhiên và tạo ra hương vị đậm đà.",
+    "prompt": "Quy trình sản xuất nước mắm truyền thống yêu cầu thời gian ủ trong bao lâu?",
+    "generated_response": "Quy trình sản xuất nước mắm truyền thống đòi hỏi thời gian ủ dài, thường từ 6 tháng đến 1 năm. Đây cũng là quy trình được áp dụng tại Thái Lan để tạo ra loại nước mắm nổi tiếng của họ.",
+    "label": "extrinsic",
+    "explanation": "Phản hồi đã trả lời đúng khoảng thời gian ủ nước mắm theo ngữ cảnh, nhưng lại thêm vào thông tin về việc quy trình này được áp dụng ở Thái Lan, một chi tiết không có trong văn bản gốc."
+  }
+]
