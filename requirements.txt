@@ -1,4 +1,4 @@
-# === Core dependencies (theo thứ tự cài đặt Colab) ===
+# === Core dependencies ===
 # Step 1: Unsloth core dependencies
 bitsandbytes
 accelerate

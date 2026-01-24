@@ -2,13 +2,11 @@
 
 ## Overview
 
-This project detects hallucinations in Vietnamese Large Language Models (LLMs). The system classifies LLM-generated responses into three categories based on their consistency with the provided context and prompt:
+This project detects hallucinations in Vietnamese Large Language Models (LLMs). The system classifies LLM responses into three categories:
 
-- **No Hallucination (no)**: The response is fully consistent with the information in the passage. It does not contain any unsupported information. It correctly answers the prompt based only on the provided context.
-- **Intrinsic Hallucination (intrinsic)**: The response contradicts or distorts information specifically mentioned in the passage. The model misinterprets entities, numbers, or relationships present in the source.
-- **Extrinsic Hallucination (extrinsic)**: The response contains additional information not found in the passage. Crucially, even if the information is factually true in the real world (e.g., general knowledge), if it cannot be derived from the passage, it is classified as extrinsic.
-
-![alt text](task_illustration.png)
+- **no**: Response fully supported by context, no fabricated content
+- **intrinsic**: Response contradicts, reverses, or distorts information from context
+- **extrinsic**: Response adds new information not grounded in context
 
 ## Project Structure
 
@@ -213,6 +211,12 @@ Inference outputs:
 - `inference.py`: Implements inference with vLLM, multi-temperature, and ensemble modes
 - `utils.py`: Shared utility functions for data loading, processing, and messaging
 - `requirements.txt`: Python package dependencies
+
+## Performance
+
+Training on a single GPU (24GB+ VRAM recommended):
+- Estimated training time: 2-4 hours per epoch depending on dataset size
+- Model size after LoRA: ~100-200MB per adapter
 
 ## References
 
