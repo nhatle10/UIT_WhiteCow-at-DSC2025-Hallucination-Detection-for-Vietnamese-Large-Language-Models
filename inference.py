@@ -69,7 +69,7 @@ def inference_vllm(args):
     required = ["id", "context", "prompt", "response"]
     for col in required:
         if col not in df.columns:
-            raise ValueError(f"Thiếu cột {col} trong test.csv")
+            raise ValueError(f"Missing required column: {col}")
     
     # Run inference in batches
     preds, raw_outputs = [], []
@@ -281,7 +281,7 @@ def parse_args():
     # Data paths
     p.add_argument("--test_csv", type=str,
                    help="Path to test CSV file")
-    p.add_argument("--fewshot_path", type=str, default="data/few_shot_2.json",
+    p.add_argument("--fewshot_path", type=str, default="data/few_shot.json",
                    help="Path to few-shot examples JSON")
     p.add_argument("--out_csv", type=str,
                    help="Output CSV file path (for single mode)")

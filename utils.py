@@ -4,13 +4,20 @@ import torch
 from collections import defaultdict
 from transformers import DataCollatorForLanguageModeling
 
-
 # ==========================
 # Data Loading
 # ==========================
 
-def load_fewshot_data(fewshot_json_path="data/few_shot_2.json"):
-    """Load few-shot examples from JSON file"""
+def load_fewshot_data(fewshot_json_path="data/few_shot.json"):
+    """
+    Load few-shot examples from a JSON file.
+
+    Args:
+        fewshot_json_path (str): Path to the few-shot examples JSON file.
+
+    Returns:
+        list[dict]: List of few-shot example dictionaries.
+    """
     with open(fewshot_json_path, "r") as f:
         fewshot_data = json.load(f)
     return fewshot_data[:]
@@ -42,42 +49,49 @@ class BoolMaskCollator(DataCollatorForLanguageModeling):
 
 def sample_fewshots(fewshot_data, k=5, seed=None):
     """
-    Lấy k ví dụ few-shot với điều kiện:
-      - có đủ cả 3 nhãn trong LABELS (mỗi nhãn >= 1)
-      - phần còn lại chọn ngẫu nhiên từ toàn bộ pool (trừ các mẫu đã lấy)
-      - trộn ngẫu nhiên thứ tự kết quả
+    Sample k few-shot examples ensuring each label is represented at least once.
+
+    Logic:
+        1. Guarantee one sample per label (no, intrinsic, extrinsic)
+        2. Randomly sample remaining (k - 3) examples from the rest
+        3. Shuffle the final order to avoid position bias
+
+    Args:
+        fewshot_data (list[dict]): List of few-shot example dictionaries.
+        k (int): Number of few-shot examples to sample (must be >= number of labels).
+        seed (int, optional): Random seed for reproducibility.
+
+    Returns:
+        list[dict]: Sampled few-shot examples.
     """
     if k < len(LABELS):
-        raise ValueError(f"k={k} phải >= số nhãn {len(LABELS)}")
+        raise ValueError(f"k={k} must be >= number of labels {len(LABELS)}")
 
-    # Gom theo nhãn
+    # Group examples by label
     by_label = defaultdict(list)
     for ex in fewshot_data:
         lab = ex.get("label")
         if lab in LABELS:
             by_label[lab].append(ex)
 
-    # Kiểm tra đủ nguồn mỗi nhãn
+    # Ensure each label has at least one example
     missing = [lab for lab in LABELS if len(by_label[lab]) == 0]
     if missing:
-        raise ValueError(f"fewshot_data thiếu ví dụ cho các nhãn: {missing}")
+        raise ValueError(f"Missing few-shot examples for labels: {missing}")
 
     rng = random.Random(seed)
 
-    # Bước 1: đảm bảo phủ đủ 3 nhãn (mỗi nhãn chọn 1)
     selected = [rng.choice(by_label[lab]) for lab in LABELS]
 
-    # Bước 2: chọn thêm (k-3) mẫu ngẫu nhiên từ phần còn lại
     used_ids = set(map(id, selected))
     remaining_pool = [ex for ex in fewshot_data if id(ex) not in used_ids]
 
     if len(remaining_pool) < (k - len(LABELS)):
-        raise ValueError(f"Không đủ few-shots để lấy {k} mẫu (pool còn {len(remaining_pool)})")
+        raise ValueError("Not enough few-shot examples to sample the requested number.")
 
     rng.shuffle(remaining_pool)
     selected.extend(remaining_pool[:(k - len(LABELS))])
 
-    # Bước 3: trộn thứ tự kết quả để tránh bias vị trí
     rng.shuffle(selected)
     return selected
 
@@ -87,7 +101,18 @@ def sample_fewshots(fewshot_data, k=5, seed=None):
 # ==========================
 
 def free_gpu():
-    """Enhanced GPU memory cleanup"""
+    """
+    Forcefully clear and synchronize GPU memory.
+
+    This function is useful when performing multiple sequential model runs
+    to avoid OOM (Out of Memory) errors.
+
+    Actions:
+        - Garbage collect Python objects
+        - Empty CUDA cache
+        - Synchronize devices
+        - Reset CUDA memory stats
+    """
     import gc
     import torch
 
@@ -124,13 +149,18 @@ def free_gpu():
 # Text Processing
 # ==========================
 
-def norm(x):
-    return "" if x is None or str(x).lower() == "nan" else str(x)
-
-
 def normalize_label(s: str) -> str:
+    """
+    Normalize input string into one of the canonical labels: no | intrinsic | extrinsic.
+
+    Args:
+        s (str): Raw label string from dataset or model output.
+
+    Returns:
+        str: Normalized label ('no', 'intrinsic', or 'extrinsic').
+    """
     s = (s or "").strip().lower()
-    for lab in ["extrinsic", "intrinsic", "no"]:
+    for lab in LABELS:
         if s.startswith(lab) or lab in s:
             return lab
     return "no"
@@ -141,6 +171,16 @@ def normalize_label(s: str) -> str:
 # ==========================
 
 def build_few_shots(fewshot_data):
+    """
+    Construct formatted few-shot examples as text prompt.
+
+    Args:
+        fewshot_data (list[dict]): List of few-shot examples, each containing
+            'context', 'prompt', 'generated_response', 'label', and 'explanation'.
+
+    Returns:
+        str: Concatenated few-shot examples in readable format.
+    """
     FEWSHOT = "Context: {context}\n\nPrompt: {prompt}\n\nResponse: {response}\n\nLabel: {label}\n\nExplanation: {explanation}\n\n"
     result = ""
     for data in fewshot_data:
@@ -155,6 +195,18 @@ def build_few_shots(fewshot_data):
 
 
 def build_user_msg(context, prompt, response, fewshot_data):
+    """
+    Build the full instruction + few-shot + target classification input for the LLM.
+
+    Args:
+        context (str): Supporting context passage.
+        prompt (str): User query or model prompt.
+        response (str): Model-generated response to classify.
+        fewshot_data (list[dict]): Few-shot demonstration examples.
+
+    Returns:
+        str: A single concatenated instruction message for the classifier model.
+    """
     INSTRUCTION = """You are a hallucination detection classifier for Vietnamese language models. 
 Your task is to classify the RESPONSE into exactly ONE label from {no, intrinsic, extrinsic}, 
 based ONLY on the given CONTEXT and PROMPT. 
@@ -196,4 +248,5 @@ Evaluation Order:
 
 
 def build_assistant_msg(label):
+    """Builds assistant's reply message with normalized label only."""
     return f"{normalize_label(label)}"

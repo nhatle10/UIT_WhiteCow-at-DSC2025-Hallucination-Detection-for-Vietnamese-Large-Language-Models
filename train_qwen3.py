@@ -18,8 +18,6 @@ from utils import (
     BoolMaskCollator,
 )
 
-
-
 # ==========================
 # Dataset Building
 # ==========================
@@ -34,7 +32,7 @@ def build_train_dataset(train_csv, tokenizer, fewshot_data, mock=False):
     required = ["id", "context", "prompt", "response", "label"]
     for col in required:
         if col not in df.columns:
-            raise ValueError(f"Thiếu cột {col}")
+            raise ValueError(f"Missing required column: {col}")
 
     def row_to_conv(row):
         fewshot_subset = sample_fewshots(fewshot_data, k=5, seed=str(row["id"]))
@@ -245,7 +243,7 @@ def parse_args():
     
     # Data paths
     p.add_argument("--train_csv", type=str, required=True, help="Path to training CSV file")
-    p.add_argument("--fewshot_path", type=str, default="data/few_shot_2.json", 
+    p.add_argument("--fewshot_path", type=str, default="data/few_shot.json", 
                    help="Path to few-shot examples JSON")
     p.add_argument("--train_from", type=str, help="Checkpoint path to continue training from")
     p.add_argument("--out_dir", type=str, default="lora_model", help="Output directory for model")

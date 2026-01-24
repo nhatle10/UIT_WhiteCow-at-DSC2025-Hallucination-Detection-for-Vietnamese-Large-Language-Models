@@ -20,7 +20,7 @@ UIT_DSC/
 ├── utils.py              # Các hàm tiện ích
 ├── requirements.txt      # Dependencies
 └── data/
-    ├── few_shot_2.json   # Ví dụ few-shot 
+    ├── few_shot.json     # Ví dụ few-shot 
     ├── train/            # Dữ liệu huấn luyện
     ├── test/             # Dữ liệu kiểm tra
     └── warmup/           # Dữ liệu warmup
@@ -86,7 +86,7 @@ Cần có các cột:
 python train_gemma3.py \
   --mode train \
   --train_csv data/train/vihallu-train.csv \
-  --fewshot_path data/few_shot_2.json \
+  --fewshot_path data/few_shot.json \
   --out_dir lora_gemma3 \
   --model_name unsloth/gemma-3-4b-it \
   --max_seq_len 8096 \
@@ -109,7 +109,7 @@ python train_gemma3.py \
 python train_gemma3.py \
   --mode continue_train \
   --train_csv data/train/vihallu-train.csv \
-  --fewshot_path data/few_shot_2.json \
+  --fewshot_path data/few_shot.json \
   --out_dir lora_gemma3 \
   --epochs 1
 ```
@@ -141,7 +141,7 @@ Tương tự Gemma-3, nhưng sử dụng `train_qwen3.py`:
 python train_qwen3.py \
   --mode train \
   --train_csv data/train/vihallu-train.csv \
-  --fewshot_path data/few_shot_2.json \
+  --fewshot_path data/few_shot.json \
   --out_dir lora_qwen3 \
   --model_name unsloth/Qwen3-4B-Instruct-2507 \
   --epochs 1
