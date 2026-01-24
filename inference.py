@@ -313,7 +313,7 @@ def parse_args():
                    help="Top-k sampling")
     
     # Multi-temperature mode
-    p.add_argument("--temperatures", type=str, default="0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9",
+    p.add_argument("--temperatures", type=str, default="0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9",
                    help="Comma-separated temperatures for multi_temp mode")
     p.add_argument("--model_prefix", type=str, default="model",
                    help="Prefix for output files in multi_temp mode")
