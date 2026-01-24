@@ -8,7 +8,7 @@ This project detects hallucinations in Vietnamese Large Language Models (LLMs). 
 - **Intrinsic Hallucination (intrinsic)**: The response contradicts or distorts information specifically mentioned in the passage. The model misinterprets entities, numbers, or relationships present in the source.
 - **Extrinsic Hallucination (extrinsic)**: The response contains additional information not found in the passage. Crucially, even if the information is factually true in the real world (e.g., general knowledge), if it cannot be derived from the passage, it is classified as extrinsic.
 
-![alt text](task_illustration.png)
+![alt text](assets/task_illustration.png)
 
 ## Project Structure
 
