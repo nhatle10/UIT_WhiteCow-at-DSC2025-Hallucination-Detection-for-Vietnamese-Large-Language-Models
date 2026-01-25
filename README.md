@@ -102,10 +102,10 @@ The `few_shot.json` file contains example samples used as few-shot demonstration
 
 ## Implementation Details
 
-- Models are fine-tuned using **Unsloth** with **LoRA (Low-Rank Adaptation)** for efficient training
-- Few-shot prompting is used during both training and inference
-- Inference leverages **vLLM** for fast batch processing
-- Supports **4-bit and 8-bit quantization** to reduce GPU memory usage
+- Models are fine-tuned using **Unsloth** with **LoRA (Low-Rank Adaptation)** for efficient training.
+- Few-shot prompting is used during both training and inference.
+- Inference leverages **vLLM** for fast batch processing.
+- Supports **4-bit and 8-bit quantization** to reduce GPU memory usage.
 
 ## Usage
 
