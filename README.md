@@ -28,13 +28,13 @@ Our system consists of two main stages: Training and Testing, as illustrated in 
 
 ![alt text](assets/architecture.jpg)
 
-Training Stage
+### Training Stage
 
 In the training stage, we fine-tune multiple small language models (SLMs), including gemma-3-4b-it and Qwen3-4B-Instruct-2507, using LoRA with the Unsloth framework. The training data is augmented with few-shot prompts to allow the models to better learn the classification patterns of hallucination types.
 
 Each model is independently fine-tuned on the same dataset, resulting in multiple specialized classifiers.
 
-Testing Stage
+### Testing Stage
 
 During inference, each test sample consisting of ```(context, prompt, response)``` is fed into the fine-tuned models.
 Each model produces a predicted label among ```{no, intrinsic, extrinsic}```.
