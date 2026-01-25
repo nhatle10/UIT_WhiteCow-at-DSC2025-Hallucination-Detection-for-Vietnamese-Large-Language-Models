@@ -180,8 +180,8 @@ python train_gemma3.py \
 |--------|---------|-------|
 | Base model | unsloth/gemma-3-4b-it | unsloth/Qwen3-4B-Instruct-2507 |
 | Chat template | gemma-3 | qwen3-instruct |
-| User message format | `<start_of_turn>user\n` | `&lt;|im_start|&gt;user\n` |
-| Model response format | `<start_of_turn>model\n` | `&lt;|im_start|&gt;assistant\n` |
+| User message format | `<start_of_turn>user\n` | `<\|im_start\|>user\n` |
+| Model response format | `<start_of_turn>model\n` | `<\|im_start\|>assistant\n` |
 
 Due to these differences, separate training scripts are implemented for each model.
 
