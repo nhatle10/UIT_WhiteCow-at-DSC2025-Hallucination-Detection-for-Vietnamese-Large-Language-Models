@@ -9,18 +9,8 @@ from transformers import DataCollatorForLanguageModeling
 # ==========================
 
 def load_fewshot_data(fewshot_json_path="data/few_shot.json"):
-    """
-    Load few-shot examples from a JSON file.
-
-    Args:
-        fewshot_json_path (str): Path to the few-shot examples JSON file.
-
-    Returns:
-        list[dict]: List of few-shot example dictionaries.
-    """
     with open(fewshot_json_path, "r") as f:
-        fewshot_data = json.load(f)
-    return fewshot_data[:]
+        return json.load(f)
 
 
 LABELS = ["no", "intrinsic", "extrinsic"]
@@ -48,49 +38,32 @@ class BoolMaskCollator(DataCollatorForLanguageModeling):
 # ==========================
 
 def sample_fewshots(fewshot_data, k=5, seed=None):
-    """
-    Sample k few-shot examples ensuring each label is represented at least once.
-
-    Logic:
-        1. Guarantee one sample per label (no, intrinsic, extrinsic)
-        2. Randomly sample remaining (k - 3) examples from the rest
-        3. Shuffle the final order to avoid position bias
-
-    Args:
-        fewshot_data (list[dict]): List of few-shot example dictionaries.
-        k (int): Number of few-shot examples to sample (must be >= number of labels).
-        seed (int, optional): Random seed for reproducibility.
-
-    Returns:
-        list[dict]: Sampled few-shot examples.
-    """
     if k < len(LABELS):
         raise ValueError(f"k={k} must be >= number of labels {len(LABELS)}")
 
-    # Group examples by label
     by_label = defaultdict(list)
-    for ex in fewshot_data:
-        lab = ex.get("label")
-        if lab in LABELS:
-            by_label[lab].append(ex)
+    for example in fewshot_data:
+        label = example.get("label")
+        if label in LABELS:
+            by_label[label].append(example)
 
-    # Ensure each label has at least one example
-    missing = [lab for lab in LABELS if len(by_label[lab]) == 0]
+    missing = [label for label in LABELS if not by_label[label]]
     if missing:
         raise ValueError(f"Missing few-shot examples for labels: {missing}")
 
     rng = random.Random(seed)
 
-    selected = [rng.choice(by_label[lab]) for lab in LABELS]
+    selected = [rng.choice(by_label[label]) for label in LABELS]
 
-    used_ids = set(map(id, selected))
-    remaining_pool = [ex for ex in fewshot_data if id(ex) not in used_ids]
+    # Use Python object id to avoid duplicating already-selected examples
+    selected_object_ids = set(map(id, selected))
+    remaining_pool = [ex for ex in fewshot_data if id(ex) not in selected_object_ids]
 
     if len(remaining_pool) < (k - len(LABELS)):
         raise ValueError("Not enough few-shot examples to sample the requested number.")
 
     rng.shuffle(remaining_pool)
-    selected.extend(remaining_pool[:(k - len(LABELS))])
+    selected.extend(remaining_pool[: (k - len(LABELS))])
 
     rng.shuffle(selected)
     return selected
@@ -101,46 +74,25 @@ def sample_fewshots(fewshot_data, k=5, seed=None):
 # ==========================
 
 def free_gpu():
-    """
-    Forcefully clear and synchronize GPU memory.
-
-    This function is useful when performing multiple sequential model runs
-    to avoid OOM (Out of Memory) errors.
-
-    Actions:
-        - Garbage collect Python objects
-        - Empty CUDA cache
-        - Synchronize devices
-        - Reset CUDA memory stats
-    """
     import gc
-    import torch
 
-    # Force garbage collection multiple times
     for _ in range(5):
         gc.collect()
 
     if torch.cuda.is_available():
-        # Clear all cached memory
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
-
-        # Reset memory stats
         torch.cuda.reset_peak_memory_stats()
         torch.cuda.reset_accumulated_memory_stats()
 
-        # Force clear all devices
         for i in range(torch.cuda.device_count()):
             with torch.cuda.device(i):
                 torch.cuda.empty_cache()
                 torch.cuda.synchronize()
 
-        # Memory info
         allocated = torch.cuda.memory_allocated() / 1024**3
         cached = torch.cuda.memory_reserved() / 1024**3
-        print(
-            f"[INFO] GPU Memory - Allocated: {allocated:.2f}GB, Cached: {cached:.2f}GB"
-        )
+        print(f"[INFO] GPU Memory - Allocated: {allocated:.2f}GB, Cached: {cached:.2f}GB")
 
     print("[INFO] GPU memory cleaned!")
 
@@ -149,20 +101,11 @@ def free_gpu():
 # Text Processing
 # ==========================
 
-def normalize_label(s: str) -> str:
-    """
-    Normalize input string into one of the canonical labels: no | intrinsic | extrinsic.
-
-    Args:
-        s (str): Raw label string from dataset or model output.
-
-    Returns:
-        str: Normalized label ('no', 'intrinsic', or 'extrinsic').
-    """
-    s = (s or "").strip().lower()
-    for lab in LABELS:
-        if s.startswith(lab) or lab in s:
-            return lab
+def normalize_label(raw_label: str) -> str:
+    raw_label = (raw_label or "").strip().lower()
+    for label in LABELS:
+        if label in raw_label:
+            return label
     return "no"
 
 
@@ -170,54 +113,19 @@ def normalize_label(s: str) -> str:
 # Prompt Building
 # ==========================
 
-def build_few_shots(fewshot_data):
-    """
-    Construct formatted few-shot examples as text prompt.
+_FEWSHOT_TEMPLATE = "Context: {context}\n\nPrompt: {prompt}\n\nResponse: {response}\n\nLabel: {label}\n\nExplanation: {explanation}\n\n"
 
-    Args:
-        fewshot_data (list[dict]): List of few-shot examples, each containing
-            'context', 'prompt', 'generated_response', 'label', and 'explanation'.
-
-    Returns:
-        str: Concatenated few-shot examples in readable format.
-    """
-    FEWSHOT = "Context: {context}\n\nPrompt: {prompt}\n\nResponse: {response}\n\nLabel: {label}\n\nExplanation: {explanation}\n\n"
-    result = ""
-    for data in fewshot_data:
-        result += FEWSHOT.format(
-            context=data["context"],
-            prompt=data["prompt"],
-            response=data["generated_response"],
-            label=data["label"],
-            explanation=data["explanation"],
-        )
-    return result
-
-
-def build_user_msg(context, prompt, response, fewshot_data):
-    """
-    Build the full instruction + few-shot + target classification input for the LLM.
-
-    Args:
-        context (str): Supporting context passage.
-        prompt (str): User query or model prompt.
-        response (str): Model-generated response to classify.
-        fewshot_data (list[dict]): Few-shot demonstration examples.
-
-    Returns:
-        str: A single concatenated instruction message for the classifier model.
-    """
-    INSTRUCTION = """You are a hallucination detection classifier for Vietnamese language models. 
-Your task is to classify the RESPONSE into exactly ONE label from {no, intrinsic, extrinsic}, 
-based ONLY on the given CONTEXT and PROMPT. 
+_INSTRUCTION = """You are a hallucination detection classifier for Vietnamese language models.
+Your task is to classify the RESPONSE into exactly ONE label from {no, intrinsic, extrinsic},
+based ONLY on the given CONTEXT and PROMPT.
 You must NEVER use knowledge outside the provided CONTEXT.
 
 Label Definitions:
-- no: RESPONSE is fully supported by CONTEXT, with no added or fabricated content. 
+- no: RESPONSE is fully supported by CONTEXT, with no added or fabricated content.
        Allowed to reject false assumptions in PROMPT if CONTEXT shows they are wrong.
-- intrinsic: RESPONSE contradicts, reverses, or distorts facts from CONTEXT. 
+- intrinsic: RESPONSE contradicts, reverses, or distorts facts from CONTEXT.
              This includes repeating false assumptions from PROMPT that conflict with CONTEXT.
-- extrinsic: RESPONSE adds new information not grounded in CONTEXT and not directly verifiable from it, 
+- extrinsic: RESPONSE adds new information not grounded in CONTEXT and not directly verifiable from it,
              without explicit contradiction.
 
 Classification Rules:
@@ -233,12 +141,27 @@ Evaluation Order:
 3. If fully supported with no addition → no
 """
 
-    FEWSHOT = """EXAMPLE CLASSIFICATION:\n\n\n""" + build_few_shots(fewshot_data)
+
+def build_few_shots(fewshot_data):
+    return "".join(
+        _FEWSHOT_TEMPLATE.format(
+            context=example["context"],
+            prompt=example["prompt"],
+            response=example["generated_response"],
+            label=example["label"],
+            explanation=example["explanation"],
+        )
+        for example in fewshot_data
+    )
+
+
+def build_user_msg(context, prompt, response, fewshot_data):
+    few_shot_section = "EXAMPLE CLASSIFICATION:\n\n\n" + build_few_shots(fewshot_data)
 
     return (
-        INSTRUCTION
+        _INSTRUCTION
         + "\n\n"
-        + FEWSHOT
+        + few_shot_section
         + "\n\n"
         + f"Please classify the following samples:\n\nContext: {context}\n\n"
         f"Prompt: {prompt}\n\n"
@@ -248,5 +171,4 @@ Evaluation Order:
 
 
 def build_assistant_msg(label):
-    """Builds assistant's reply message with normalized label only."""
-    return f"{normalize_label(label)}"
+    return normalize_label(label)
