@@ -44,8 +44,7 @@ To improve robustness and reduce variance, we apply ensemble learning by aggrega
 ## Project Structure
 
 ```
-├── train_gemma3.py       # Training script for gemma-3-4b-it model
-├── train_qwen3.py        # Training script for Qwen3-4B-Instruct-2507 model
+├── train.py              # Training script for all models
 ├── inference.py          # Inference script with multiple modes
 ├── utils.py              # Utility functions
 ├── requirements.txt      # Dependencies
@@ -60,16 +59,29 @@ To improve robustness and reduce variance, we apply ensemble learning by aggrega
 
 ### Requirements
 
-- Python 3.8+
+- Python 3.10+ (3.11 recommended)
 - CUDA-capable GPU
 - 50GB+ free disk space
 
 ### Setup
 
+> **Note:** `unsloth` (training) and `vllm` (inference) conflict at the CUDA level and cannot be installed in the same environment. Use two separate environments as shown below.
+
+**Environment 1 — Training:**
 ```bash
 git clone https://github.com/nhatle10/UIT_DSC2025.git
 cd UIT_DSC2025
-pip install -r requirements.txt
+
+conda create -n train_env python=3.11  # 3.10–3.12 also supported
+conda activate train_env
+pip install -r requirements_train.txt
+```
+
+**Environment 2 — Inference:**
+```bash
+conda create -n infer_env python=3.11  # 3.10–3.12 also supported
+conda activate infer_env
+pip install -r requirements_infer.txt
 ```
 
 ### Key Dependencies
@@ -114,12 +126,13 @@ The `few_shot.json` file contains example samples used as few-shot demonstration
 #### gemma-3-4b-it model (Fine-tuning)
 
 ```bash
-python train_gemma3.py \
+python train.py \
   --mode train \
   --train_csv data/train/vihallu-train.csv \
   --fewshot_path data/few_shot.json \
   --out_dir lora_gemma3 \
   --model_name unsloth/gemma-3-4b-it \
+  --chat_template gemma-3 \
   --max_seq_len 8096 \
   --lora_r 32 \
   --lora_alpha 32 \
@@ -133,12 +146,13 @@ python train_gemma3.py \
 #### Qwen3-4B-Instruct-2507 (Fine-tuning)
 
 ```bash
-python train_qwen3.py \
+python train.py \
   --mode train \
   --train_csv data/train/vihallu-train.csv \
   --fewshot_path data/few_shot.json \
   --out_dir lora_qwen3 \
-  --model_name unsloth/Qwen2.5-4B-Instruct \
+  --model_name unsloth/Qwen3-4B-Instruct-2507 \
+  --chat_template qwen3-instruct \
   --max_seq_len 8096 \
   --lora_r 32 \
   --lora_alpha 32 \
@@ -152,11 +166,13 @@ python train_qwen3.py \
 #### Continue Fine-tuning from Checkpoint
 
 ```bash
-python train_gemma3.py \
+python train.py \
   --mode continue_train \
   --train_csv data/train/vihallu-train.csv \
   --fewshot_path data/few_shot.json \
-  --out_dir lora_gemma3
+  --out_dir lora_gemma3 \
+  --model_name unsloth/gemma-3-4b-it \
+  --chat_template gemma-3
 ```
 
 ### Training Parameters
@@ -183,7 +199,7 @@ python train_gemma3.py \
 | User message format | `<start_of_turn>user\n` | `<\|im_start\|>user\n` |
 | Model response format | `<start_of_turn>model\n` | `<\|im_start\|>assistant\n` |
 
-Due to these differences, separate training scripts are implemented for each model.
+Due to these differences, the `--chat_template` argument is used to select the appropriate template when running `train.py`.
 
 ### Inference with Pretrained Models
 

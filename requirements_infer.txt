@@ -1,0 +1,7 @@
+# Inference dependencies (vllm environment)
+vllm
+transformers==4.55.4
+torch>=2.1.0
+tqdm
+pandas
+numpy
