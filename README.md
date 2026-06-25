@@ -258,3 +258,7 @@ Our system achieved 3rd place in the UIT_DSC 2025 Hallucination Detection challe
 - [HuggingFace Transformers](https://huggingface.co/docs/transformers/)
 - [vLLM](https://docs.vllm.ai/): Fast inference engine
 - [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

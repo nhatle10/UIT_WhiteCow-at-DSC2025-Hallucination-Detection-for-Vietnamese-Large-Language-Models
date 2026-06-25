@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Model checkpoints & weights
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+outputs/
+runs/
+
+# HuggingFace cache
+.cache/
+~/.cache/huggingface/
+
+# vLLM / inference cache
+ray/
+/tmp/
+
+# Output files
+raw_output/
+process_output/
+final_submit.csv
+*.csv.bak
+
+# Logs
+*.log
+logs/
+wandb/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
